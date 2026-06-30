@@ -1,0 +1,1799 @@
+{
+  "info": {
+    "_postman_id": "kanbex-auth-collection",
+    "name": "Kanbex API",
+    "description": "Complete API testing for Kanbex.\n\n## Testing Order:\n1. Health Check\n2. Register User\n3. Login User\n4. Get Current User\n5. Create Project\n6. Create/Manage Columns\n7. Create/Manage Tasks\n8. Refresh Token\n9. Logout\n\n## Variables:\n- `baseUrl`: http://localhost:4000/api/v1\n- `accessToken`: Auto-set after login/register\n- `refreshToken`: Auto-set after login/register\n- `projectId`: Auto-set after creating project\n- `columnId`: Auto-set after creating column\n- `taskId`: Auto-set after creating task",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "projectId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "columnId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4000",
+              "path": ["health"]
+            },
+            "description": "Verify the server is running and healthy."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. Registration",
+      "item": [
+        {
+          "name": "Register New User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', response.data.accessToken);",
+                  "        console.log('Access token saved');",
+                  "    }",
+                  "    pm.test('Registration successful', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.user.email).to.exist;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SecurePass123!\",\n    \"name\": \"Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account.\n\n**Required fields:**\n- email: Valid email address\n- password: Min 8 chars, 1 uppercase, 1 lowercase, 1 number\n- name: User's display name\n\n**Response:**\n- 201: User created successfully with tokens\n- 409: User already exists\n- 400: Validation error"
+          },
+          "response": []
+        },
+        {
+          "name": "Register - Duplicate Email (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"AnotherPass123!\",\n    \"name\": \"Another User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Attempt to register with an existing email. Should return 409 conflict."
+          },
+          "response": []
+        },
+        {
+          "name": "Register - Invalid Email (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"invalid-email\",\n    \"password\": \"SecurePass123!\",\n    \"name\": \"Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Attempt to register with invalid email format. Should return 400 validation error."
+          },
+          "response": []
+        },
+        {
+          "name": "Register - Weak Password (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"newuser@example.com\",\n    \"password\": \"weak\",\n    \"name\": \"Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Attempt to register with a weak password. Should return 400 validation error."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Login",
+      "item": [
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', response.data.accessToken);",
+                  "        console.log('Access token saved');",
+                  "    }",
+                  "    pm.test('Login successful', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.user.email).to.exist;",
+                  "        pm.expect(response.data.accessToken).to.exist;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login with existing credentials.\n\n**Required fields:**\n- email: Registered email address\n- password: Account password\n\n**Response:**\n- 200: Login successful with tokens\n- 401: Invalid credentials\n- 400: Validation error\n\n**Note:** Refresh token is set as httpOnly cookie"
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Invalid Credentials (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"WrongPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Attempt to login with wrong password. Should return 401 unauthorized."
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Non-existent User (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"nonexistent@example.com\",\n    \"password\": \"SomePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Attempt to login with non-existent email. Should return 401 unauthorized."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Authenticated Routes",
+      "item": [
+        {
+          "name": "Get Current User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get user successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.user).to.exist;",
+                  "    pm.expect(response.data.user.email).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get the currently authenticated user's profile.\n\n**Headers:**\n- Authorization: Bearer <accessToken>\n\n**Response:**\n- 200: User profile data\n- 401: Unauthorized (no/invalid token)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User - No Token (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Attempt to access protected route without token. Should return 401 unauthorized."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User - Invalid Token (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid-token-here"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Attempt to access protected route with invalid token. Should return 401 unauthorized."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Projects",
+      "item": [
+        {
+          "name": "List Projects",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('List projects successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.projects).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            },
+            "description": "List all projects for the authenticated user.\n\n**Response:**\n- 200: Array of projects\n- 401: Unauthorized"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.project && response.data.project.id) {",
+                  "        pm.collectionVariables.set('projectId', response.data.project.id);",
+                  "        console.log('Project ID saved:', response.data.project.id);",
+                  "    }",
+                  "    pm.test('Project created successfully', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.project.name).to.equal('My Test Project');",
+                  "        pm.expect(response.data.project.columns).to.be.an('array');",
+                  "        pm.expect(response.data.project.columns).to.have.lengthOf(4);",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"My Test Project\",\n    \"description\": \"A test project for API testing\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            },
+            "description": "Create a new project with default columns.\n\n**Required fields:**\n- name: Project name (1-100 chars)\n\n**Optional fields:**\n- description: Project description (max 500 chars)\n\n**Response:**\n- 201: Project created with 4 default columns (Backlog, To Do, In Progress, Done)\n- 400: Validation error\n- 401: Unauthorized"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get project successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.project).to.exist;",
+                  "    pm.expect(response.data.project.columns).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            },
+            "description": "Get a single project by ID with its columns.\n\n**Response:**\n- 200: Project with columns\n- 401: Unauthorized\n- 404: Project not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Project updated successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.project.name).to.equal('Updated Project Name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Project Name\",\n    \"description\": \"Updated description\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            },
+            "description": "Update a project's name and/or description.\n\n**Optional fields:**\n- name: New project name\n- description: New description\n\n**Response:**\n- 200: Updated project\n- 400: Validation error\n- 401: Unauthorized\n- 403: Not project owner/admin\n- 404: Project not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project - Invalid ID (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/invalid-project-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "invalid-project-id"]
+            },
+            "description": "Attempt to get a project that doesn't exist. Should return 404."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Project deleted successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});",
+                  "// Clear projectId after deletion",
+                  "pm.collectionVariables.set('projectId', '');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            },
+            "description": "Delete a project (soft delete).\n\n**Note:** Run this LAST after testing columns. Creates new project for subsequent tests.\n\n**Response:**\n- 200: Project deleted\n- 401: Unauthorized\n- 403: Not project owner\n- 404: Project not found"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Columns",
+      "item": [
+        {
+          "name": "List Columns for Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('List columns successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.columns).to.be.an('array');",
+                  "});",
+                  "// Save first column ID for subsequent tests",
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data.columns && response.data.columns.length > 0) {",
+                  "        pm.collectionVariables.set('columnId', response.data.columns[0].id);",
+                  "        console.log('Column ID saved:', response.data.columns[0].id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/columns",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "columns"]
+            },
+            "description": "List all columns for a project, ordered by position.\n\n**Response:**\n- 200: Array of columns\n- 401: Unauthorized\n- 404: Project not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Column",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.column && response.data.column.id) {",
+                  "        pm.collectionVariables.set('columnId', response.data.column.id);",
+                  "        console.log('New column ID saved:', response.data.column.id);",
+                  "    }",
+                  "    pm.test('Column created successfully', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.column.name).to.equal('New Column');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"New Column\",\n    \"color\": \"#FF5733\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/columns",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "columns"]
+            },
+            "description": "Create a new column in a project.\n\n**Required fields:**\n- name: Column name (1-50 chars)\n\n**Optional fields:**\n- color: Hex color (e.g., #FF5733)\n- order: Position (defaults to end)\n\n**Response:**\n- 201: Column created\n- 400: Validation error\n- 401: Unauthorized\n- 404: Project not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Column at Position 0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.test('Column created at position 0', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.column.order).to.equal(0);",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"First Column\",\n    \"color\": \"#3498DB\",\n    \"order\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/columns",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "columns"]
+            },
+            "description": "Create a column at position 0 (shifts other columns).\n\n**Note:** All existing columns will have their order incremented."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Column by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get column successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.column).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}"]
+            },
+            "description": "Get a single column by ID.\n\n**Response:**\n- 200: Column data\n- 401: Unauthorized\n- 404: Column not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Column",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Column updated successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.column.name).to.equal('Updated Column Name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Column Name\",\n    \"color\": \"#9B59B6\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}"]
+            },
+            "description": "Update a column's name and/or color.\n\n**Optional fields:**\n- name: New column name (1-50 chars)\n- color: New hex color (or null to remove)\n\n**Response:**\n- 200: Updated column\n- 400: Validation error\n- 401: Unauthorized\n- 403: Viewer cannot update\n- 404: Column not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Reorder Column",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Column reordered successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.column.order).to.equal(2);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"newOrder\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}/reorder",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}", "reorder"]
+            },
+            "description": "Reorder a column to a new position.\n\n**Required fields:**\n- newOrder: New position (0-based index)\n\n**Behavior:**\n- Columns between old and new positions are shifted\n- Moving right: columns shift left\n- Moving left: columns shift right\n\n**Response:**\n- 200: Updated column with new order\n- 400: Validation error\n- 401: Unauthorized\n- 403: Viewer cannot reorder\n- 404: Column not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Column - Invalid ID (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/columns/invalid-column-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "invalid-column-id"]
+            },
+            "description": "Attempt to get a column that doesn't exist. Should return 404."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Column",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Column deleted successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});",
+                  "// Clear columnId after deletion",
+                  "pm.collectionVariables.set('columnId', '');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}"]
+            },
+            "description": "Delete a column (soft delete).\n\n**Note:** Remaining columns are reordered to close the gap.\n\n**Response:**\n- 200: Column deleted\n- 401: Unauthorized\n- 403: Viewer cannot delete\n- 404: Column not found"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Tasks",
+      "item": [
+        {
+          "name": "List Tasks for Column",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('List tasks successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.tasks).to.be.an('array');",
+                  "});",
+                  "// Save first task ID for subsequent tests if exists",
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data.tasks && response.data.tasks.length > 0) {",
+                  "        pm.collectionVariables.set('taskId', response.data.tasks[0].id);",
+                  "        console.log('Task ID saved:', response.data.tasks[0].id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}", "tasks"]
+            },
+            "description": "List all tasks for a column, ordered by position.\n\n**Query params:**\n- includeDeleted: true to include soft-deleted tasks\n- priority: HIGH, MEDIUM, LOW to filter by priority\n- search: Search term for title/description\n\n**Response:**\n- 200: Array of tasks\n- 401: Unauthorized\n- 404: Column not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.task && response.data.task.id) {",
+                  "        pm.collectionVariables.set('taskId', response.data.task.id);",
+                  "        console.log('New task ID saved:', response.data.task.id);",
+                  "    }",
+                  "    pm.test('Task created successfully', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.task.title).to.equal('My First Task');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"My First Task\",\n    \"description\": \"This is a test task for API testing\",\n    \"priority\": \"MEDIUM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}", "tasks"]
+            },
+            "description": "Create a new task in a column.\n\n**Required fields:**\n- title: Task title (1-200 chars)\n\n**Optional fields:**\n- description: Task description (max 5000 chars)\n- priority: HIGH, MEDIUM, LOW\n- dueDate: ISO 8601 datetime\n- order: Position (defaults to end)\n\n**Response:**\n- 201: Task created\n- 400: Validation error\n- 401: Unauthorized\n- 403: No permission\n- 404: Column not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task with Due Date",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.test('Task created with due date', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.task.dueDate).to.exist;",
+                  "        pm.expect(response.data.task.priority).to.equal('HIGH');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Urgent Task with Deadline\",\n    \"description\": \"This task has a due date and high priority\",\n    \"priority\": \"HIGH\",\n    \"dueDate\": \"2025-12-31T23:59:59.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}", "tasks"]
+            },
+            "description": "Create a task with a due date and high priority."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task at Position 0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.test('Task created at position 0', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.task.order).to.equal(0);",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Top Priority Task\",\n    \"order\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}", "tasks"]
+            },
+            "description": "Create a task at position 0 (shifts other tasks).\n\n**Note:** All existing tasks will have their order incremented."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Task by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get task successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.task).to.exist;",
+                  "    pm.expect(response.data.task.column).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            },
+            "description": "Get a single task by ID.\n\n**Response:**\n- 200: Task data with column info\n- 401: Unauthorized\n- 404: Task not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Task updated successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.task.title).to.equal('Updated Task Title');",
+                  "    pm.expect(response.data.task.priority).to.equal('LOW');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Task Title\",\n    \"description\": \"Updated description with more details\",\n    \"priority\": \"LOW\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            },
+            "description": "Update a task's properties.\n\n**Optional fields:**\n- title: New task title (1-200 chars)\n- description: New description (null to clear)\n- priority: HIGH, MEDIUM, LOW, or null\n- dueDate: ISO 8601 datetime or null to clear\n\n**Response:**\n- 200: Updated task\n- 400: Validation error\n- 401: Unauthorized\n- 403: No permission\n- 404: Task not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Task Due Date",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Due date cleared', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.task.dueDate).to.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"dueDate\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            },
+            "description": "Clear a task's due date by setting it to null."
+          },
+          "response": []
+        },
+        {
+          "name": "Reorder Task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Task reordered successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.task.order).to.equal(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"order\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/reorder",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "reorder"]
+            },
+            "description": "Reorder a task within its column.\n\n**Required fields:**\n- order: New position (0-based index)\n\n**Behavior:**\n- Tasks between old and new positions are shifted\n- Moving right: tasks shift left\n- Moving left: tasks shift right\n\n**Response:**\n- 200: Updated task with new order\n- 400: Validation error or invalid order\n- 401: Unauthorized\n- 403: No permission\n- 404: Task not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Move Task to Another Column",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Task moved successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.task.column).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"targetColumnId\": \"{{columnId}}\",\n    \"order\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/move",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "move"]
+            },
+            "description": "Move a task to a different column and/or position.\n\n**Required fields:**\n- targetColumnId: ID of the destination column\n- order: Position in the destination column (0-based)\n\n**Note:** Update targetColumnId to a different column to test cross-column moves.\n\n**Response:**\n- 200: Updated task with new column and order\n- 400: Invalid target column or order\n- 401: Unauthorized\n- 403: No permission\n- 404: Task not found"
+          },
+          "response": []
+        },
+        {
+          "name": "List Tasks with Priority Filter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Filtered tasks returned', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.tasks).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}/tasks?priority=HIGH",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}", "tasks"],
+              "query": [
+                {
+                  "key": "priority",
+                  "value": "HIGH"
+                }
+              ]
+            },
+            "description": "List tasks filtered by priority.\n\n**Valid values:** HIGH, MEDIUM, LOW"
+          },
+          "response": []
+        },
+        {
+          "name": "List Tasks with Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Search results returned', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.tasks).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/columns/{{columnId}}/tasks?search=test",
+              "host": ["{{baseUrl}}"],
+              "path": ["columns", "{{columnId}}", "tasks"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "test"
+                }
+              ]
+            },
+            "description": "Search tasks by title or description."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Task - Invalid ID (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/invalid-task-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "invalid-task-id"]
+            },
+            "description": "Attempt to get a task that doesn't exist. Should return 404."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Task deleted successfully', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});",
+                  "// Clear taskId after deletion",
+                  "pm.collectionVariables.set('taskId', '');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            },
+            "description": "Delete a task (soft delete).\n\n**Note:** Remaining tasks are reordered to close the gap.\n\n**Response:**\n- 200: Task deleted\n- 401: Unauthorized\n- 403: No permission\n- 404: Task not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Delete Tasks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Bulk delete processed', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.data.deleted).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"taskIds\": [\"task-id-1\", \"task-id-2\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/bulk-delete",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "bulk-delete"]
+            },
+            "description": "Bulk delete multiple tasks.\n\n**Required fields:**\n- taskIds: Array of task IDs to delete (max 50)\n\n**Response:**\n- 200: All tasks deleted successfully\n- 207: Partial success (some tasks deleted, some failed)\n- 401: Unauthorized"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Token Refresh",
+      "item": [
+        {
+          "name": "Refresh Token (via Body)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', response.data.accessToken);",
+                  "        console.log('New access token saved');",
+                  "    }",
+                  "    pm.test('Token refresh successful', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.accessToken).to.exist;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Refresh the access token using a refresh token.\n\n**Note:** In browser, the refresh token is automatically sent via httpOnly cookie. For Postman testing, you can send it in the body.\n\n**Response:**\n- 200: New access token issued\n- 401: Invalid/expired refresh token"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token - Invalid (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"invalid-refresh-token\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Attempt to refresh with invalid token. Should return 401."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. Password Reset",
+      "item": [
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"testuser@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "forgot-password"]
+            },
+            "description": "Request a password reset email.\n\n**Note:** Always returns success to prevent email enumeration. Check server logs for the reset token in development.\n\n**Response:**\n- 200: Success message (always, for security)"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"token\": \"paste-reset-token-from-server-logs\",\n    \"password\": \"NewSecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "reset-password"]
+            },
+            "description": "Reset password using the token from forgot-password email.\n\n**To test:**\n1. Call Forgot Password\n2. Check server logs for the reset token\n3. Paste the token in this request\n\n**Response:**\n- 200: Password reset successful\n- 400: Invalid/expired token"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password - Invalid Token (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"token\": \"invalid-reset-token\",\n    \"password\": \"NewSecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "reset-password"]
+            },
+            "description": "Attempt password reset with invalid token. Should return 400."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. Logout",
+      "item": [
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Logout successful', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});",
+                  "",
+                  "// Clear tokens after logout",
+                  "pm.collectionVariables.set('accessToken', '');",
+                  "pm.collectionVariables.set('refreshToken', '');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Logout the current user.\n\n**Actions:**\n- Revokes the refresh token from database\n- Clears the refresh token cookie\n\n**Response:**\n- 200: Logout successful"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Logout - Get User (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "After logout, this should still work until the access token expires (15 min). The refresh token has been revoked, so new tokens cannot be obtained."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10. OAuth",
+      "item": [
+        {
+          "name": "DEV - Simulate OAuth Login (Google)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', response.data.accessToken);",
+                  "        console.log('OAuth access token saved');",
+                  "    }",
+                  "    pm.test('OAuth login successful', function() {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.user.provider).to.equal('google');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"provider\": \"google\",\n    \"providerId\": \"google-user-id-123456789\",\n    \"email\": \"oauthuser@gmail.com\",\n    \"name\": \"OAuth Test User\",\n    \"avatar\": \"https://lh3.googleusercontent.com/a/default-user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/dev/oauth-test",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "dev", "oauth-test"]
+            },
+            "description": "**DEVELOPMENT ONLY** - Simulate OAuth login without going through Google.\n\n**Required fields:**\n- provider: OAuth provider name (google, apple, github)\n- providerId: Unique ID from the OAuth provider\n- email: User's email from OAuth provider\n- name: User's display name from OAuth provider\n\n**Optional fields:**\n- avatar: URL to user's profile picture\n\n**Behavior:**\n- If user with this provider+providerId exists: logs them in\n- If user with this email exists: links OAuth to existing account\n- Otherwise: creates new user\n\n**Response:**\n- 201: User created/logged in with tokens\n- 400: Missing required fields"
+          },
+          "response": []
+        },
+        {
+          "name": "DEV - Simulate OAuth Login (Apple)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', response.data.accessToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"provider\": \"apple\",\n    \"providerId\": \"apple.user.abc123xyz\",\n    \"email\": \"privaterelay@privaterelay.appleid.com\",\n    \"name\": \"Apple Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/dev/oauth-test",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "dev", "oauth-test"]
+            },
+            "description": "**DEVELOPMENT ONLY** - Simulate Apple OAuth login.\n\nApple often provides a private relay email address."
+          },
+          "response": []
+        },
+        {
+          "name": "DEV - Link OAuth to Existing Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"provider\": \"google\",\n    \"providerId\": \"google-new-id-987654321\",\n    \"email\": \"testuser@example.com\",\n    \"name\": \"Test User\",\n    \"avatar\": \"https://lh3.googleusercontent.com/a/new-avatar\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/dev/oauth-test",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "dev", "oauth-test"]
+            },
+            "description": "**DEVELOPMENT ONLY** - Test linking OAuth to an existing local account.\n\nUse the same email as an existing user (e.g., testuser@example.com from registration tests). The OAuth provider will be linked to that account."
+          },
+          "response": []
+        },
+        {
+          "name": "Google OAuth - Browser Flow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/google",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "google"]
+            },
+            "description": "Start real Google OAuth flow.\n\n**Note:** This endpoint redirects to Google's login page. Open this URL in a browser to test the full OAuth flow.\n\n**Requirements:**\n- GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in .env\n- Callback URL must be configured in Google Console"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11. Rate Limiting",
+      "item": [
+        {
+          "name": "Rate Limit Test - Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"ratelimit@example.com\",\n    \"password\": \"TestPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Test rate limiting on auth endpoints.\n\n**Rate Limits:**\n- Auth endpoints: 5 requests per 15 minutes\n\n**To test:**\n1. Run this request multiple times quickly\n2. After 5 attempts, should receive 429 Too Many Requests"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
