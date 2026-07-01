@@ -393,11 +393,6 @@ npm run test:frontend    # Run frontend tests only
 - API: [https://kanbex-api.onrender.com](https://kanbex-api.onrender.com)
 
 > Note: Render free tier services spin down after inactivity. First load may take 30–60 seconds to wake up.
-
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
 ---
 
-Built with Next.js, Express.js, and PostgreSQL
+Built with ❤️ by Akash Tripathi
