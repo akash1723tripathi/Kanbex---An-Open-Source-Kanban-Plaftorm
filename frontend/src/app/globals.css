@@ -350,6 +350,10 @@
     @apply bg-gray-800 text-white hover:bg-gray-700 rounded-button px-4 py-2 text-sm font-medium transition-colors;
   }
 
+  .dark .btn-primary {
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200;
+  }
+
   .btn-secondary {
     @apply bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-button px-4 py-2 text-sm font-medium transition-colors;
   }

@@ -87,9 +87,9 @@ export function Sidebar({
           collapsed ? 'justify-center' : 'justify-between'
         )}>
           {collapsed ? (
-            <LogoIcon className={isDark ? 'text-gray-200' : 'text-gray-800'} />
+            <LogoIcon className={isDark ? 'text-gray-200' : 'text-gray-800'} variant={isDark ? 'light' : 'dark'} />
           ) : (
-            <Logo className={isDark ? 'text-gray-200' : 'text-gray-800'} />
+            <Logo className={isDark ? 'text-gray-200' : 'text-gray-800'} variant={isDark ? 'light' : 'dark'} />
           )}
 
           {/* Mobile Close Button - positioned absolutely to stay within sidebar */}

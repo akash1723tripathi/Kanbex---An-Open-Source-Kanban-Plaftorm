@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 interface LogoProps {
   className?: string;
   showText?: boolean;
+  variant?: 'light' | 'dark';
 }
 
 function getLogoSrc(className?: string): string {
@@ -16,8 +17,12 @@ function getLogoSrc(className?: string): string {
   return isDarkSurface ? '/images/kanbex_logo_white.png' : '/images/kanbex_logo_black.png';
 }
 
-export function Logo({ className, showText = true }: LogoProps) {
-  const logoSrc = getLogoSrc(className);
+export function Logo({ className, showText = true, variant }: LogoProps) {
+  const logoSrc = variant
+    ? variant === 'light'
+      ? '/images/kanbex_logo_white.png'
+      : '/images/kanbex_logo_black.png'
+    : getLogoSrc(className);
 
   return (
     <div className={cn('inline-flex items-center gap-3 shrink-0 h-11', className)} aria-label="Kanbex">
@@ -34,8 +39,8 @@ export function Logo({ className, showText = true }: LogoProps) {
   );
 }
 
-export function LogoIcon({ className }: { className?: string }) {
-  return <Logo className={className} showText={false} />;
+export function LogoIcon({ className, variant }: { className?: string; variant?: 'light' | 'dark' }) {
+  return <Logo className={className} showText={false} variant={variant} />;
 }
 
 export default Logo;
