@@ -2,10 +2,10 @@ import type { ProductShowcaseContent } from "../types";
 
 export const productShowcaseContent: ProductShowcaseContent = {
   header: {
-    line1: "Your All-In-One Task",
-    line2: "Command Center",
+    line1: "Your Centralized Project",
+    line2: "Control Hub",
   },
   description:
-    "Experience a real-time view of all your projects, tasks, and teams — organized visually, designed for speed.",
+    "Gain a live, unified overview of all assignments, workflows, and groups — beautifully structured, engineered for performance.",
 };
   

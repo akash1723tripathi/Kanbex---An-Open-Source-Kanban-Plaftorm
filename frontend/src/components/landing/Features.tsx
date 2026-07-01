@@ -81,11 +81,11 @@ export function Features() {
 // Task Card Preview Component
 function TaskCardPreview() {
   const tags = [
-    { label: 'UI/UX', bgColor: 'bg-[#ECFDF5]', textColor: 'text-[#10B981]' },
-    { label: 'Design', bgColor: 'bg-[#FFFBEB]', textColor: 'text-[#F59E0B]' },
-    { label: 'High', bgColor: 'bg-[#EFF6FF]', textColor: 'text-[#3B82F6]' },
-    { label: 'Wireframe', bgColor: 'bg-[#F5F3FF]', textColor: 'text-[#8B5CF6]' },
-    { label: 'Prototype', bgColor: 'bg-[#FDF2F8]', textColor: 'text-[#EC4899]' },
+    { label: 'Product Design', bgColor: 'bg-[#ECFDF5]', textColor: 'text-[#10B981]' },
+    { label: 'Creative', bgColor: 'bg-[#FFFBEB]', textColor: 'text-[#F59E0B]' },
+    { label: 'Critical', bgColor: 'bg-[#EFF6FF]', textColor: 'text-[#3B82F6]' },
+    { label: 'Draft', bgColor: 'bg-[#F5F3FF]', textColor: 'text-[#8B5CF6]' },
+    { label: 'Demo', bgColor: 'bg-[#FDF2F8]', textColor: 'text-[#EC4899]' },
   ];
 
   const avatars = [
@@ -117,10 +117,10 @@ function TaskCardPreview() {
           {/* Title & Description */}
           <div className="flex flex-col gap-[5.387px]">
             <h4 className="text-[14.365px] font-semibold text-black leading-[17.957px]">
-              Redesign Dashboard
+              Overhaul Interface
             </h4>
             <p className="text-[10.774px] text-gray-500 leading-[1.5]">
-              Refine header with minimal layout, icon buttons, and improved spacing.
+              Enhance navigation using a clean layout, clickable controls, and expanded margins.
             </p>
           </div>
 
@@ -152,7 +152,7 @@ function TaskCardPreview() {
               className="w-[14.365px] h-[14.365px]"
             />
             <span className="text-[8.978px] text-gray-500 leading-[1.5]">
-              5 Files
+              5 Documents
             </span>
           </div>
 
@@ -182,18 +182,7 @@ function TaskCardPreview() {
 
 // Invite Card Preview Component
 function InviteCardPreview() {
-  const members = [
-    {
-      name: 'Dimitri Ivanov',
-      role: 'Designer',
-      avatar: '/images/hero/avatar-robert.png',
-    },
-    {
-      name: 'Hamail Harrison',
-      role: 'Senior Designer',
-      avatar: '/images/hero/avatar-henry.png',
-    },
-  ];
+  const members = featuresSection.preview.members;
 
   return (
     <div className="bg-white rounded-[10.967px] border border-gray-200 w-[290px] absolute left-[48px] top-[46px]">
@@ -201,7 +190,7 @@ function InviteCardPreview() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <h4 className="text-[14.872px] font-semibold text-black leading-[14.872px]">
-            Add New Member
+            Invite Collaborator
           </h4>
           <Image
             src="/images/hero/icon-close.svg"
@@ -215,7 +204,7 @@ function InviteCardPreview() {
         {/* Members List */}
         <div className="flex flex-col gap-[12.641px]">
           <p className="text-[8.923px] text-gray-500 leading-[11.897px]">
-            Team Member
+            Project Member
           </p>
           <div className="flex flex-col gap-[7.436px]">
             {members.map((member, index) => (
@@ -225,8 +214,8 @@ function InviteCardPreview() {
                   <div className="flex items-center gap-[6.692px]">
                     <div className="w-[29.744px] h-[29.744px] rounded-full overflow-hidden">
                       <Image
-                        src={member.avatar}
-                        alt=""
+                        src={member.avatar || '/images/hero/avatar-robert.png'}
+                        alt={member.name}
                         width={30}
                         height={30}
                         className="w-full h-full object-cover"
@@ -263,12 +252,14 @@ function InviteCardPreview() {
 
 // Project Progress Preview Component (Gauge Chart)
 function ProjectProgressPreview() {
+  const progressData = featuresSection.preview.progress;
+
   return (
     <div className="bg-white rounded-md px-5 py-3 w-[284px] flex flex-col gap-[14px] items-center overflow-hidden">
       {/* Title */}
       <div className="flex items-center justify-center w-[256px]">
         <h4 className="text-base font-medium text-[#262730] leading-normal">
-          Project Progress
+          {progressData.title}
         </h4>
       </div>
 
@@ -322,7 +313,7 @@ function ProjectProgressPreview() {
 
           {/* Percentage text */}
           <p className="absolute left-1/2 -translate-x-1/2 top-[47px] text-lg font-bold text-[#262730] tracking-[0.9px] uppercase whitespace-nowrap">
-            86%
+            {progressData.percentage}%
           </p>
 
           {/* Needle/tick indicator on the right */}
@@ -346,7 +337,7 @@ function ProjectProgressPreview() {
               className="w-[6px] h-[6px]"
             />
             <span className="text-[10px] font-medium text-gray-600 leading-normal">
-              +12% vs Last Week
+              {progressData.comparison}
             </span>
           </div>
         </div>

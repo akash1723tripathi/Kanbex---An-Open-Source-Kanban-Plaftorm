@@ -23,7 +23,7 @@ export function FloatingProgressCard({ variant = 'floating' }: FloatingProgressC
     <div className="bg-white rounded-xl border border-gray-200 px-5 py-4 shadow-[0_0_20px_rgba(0,0,0,0.08)] h-full flex flex-col">
       {/* Title */}
       <h4 className="font-medium text-base text-gray-800 text-center mb-4">
-        Project Progress
+        Project Velocity
       </h4>
 
       {/* Gauge */}
@@ -84,7 +84,7 @@ export function FloatingProgressCard({ variant = 'floating' }: FloatingProgressC
       {/* Comparison text */}
       <div className="flex items-center justify-center gap-1 text-gray-600">
         <TrendingUp className="w-3 h-3 text-emerald-500" />
-        <span className="text-[11px]">+12% vs Last Week</span>
+        <span className="text-[11px]">+12% compared to last week</span>
       </div>
     </div>
   );

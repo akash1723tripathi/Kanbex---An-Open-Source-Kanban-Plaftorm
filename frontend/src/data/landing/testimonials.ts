@@ -1,37 +1,37 @@
 import type { TestimonialsSection } from "../types";
 
 export const testimonialsSection: TestimonialsSection = {
-  header: "What Our Users Say About Kanbex",
+  header: "What Our Customers Think of Kanbex",
   description:
-    "Teams love how Kanbex helps them stay organized, collaborate seamlessly, and complete work faster — without the chaos.",
+    "Organizations appreciate how Kanbex keeps them structured, enables smooth synergy, and completes projects faster — free from clutter.",
   testimonials: [
     {
       id: "octavia",
-      name: "Octavia Khan",
-      role: "People Ops",
+      name: "Ojasvi Kapoor",
+      role: "People Operations",
       company: "Craftwise",
       quote:
-        "Kanbex has completely changed how we operate. I used to manage my team's tasks across multiple tools, but with Kanbex, everything is centralized and effortless. From assigning tasks to tracking progress — it just works.",
+        "Kanbex has transformed our operational workflow entirely. Previously, coordinating my group's duties meant shuffling between several applications, but Kanbex has unified everything in one painless space. From task delegation to progress updates, the system is seamless.",
     },
     {
       id: "ravi",
-      name: "Ravi Malhotra",
+      name: "Rohan Mehra",
       role: "Engineering Manager",
       company: "Hexware",
       quote:
-        "We run a fast-paced dev team and needed something lightweight yet powerful. Kanbex delivered. Tagging, priorities, due dates — it's all customizable and built for how real teams work.",
+        "As a high-velocity development squad, we sought a light but robust solution. Kanbex exceeded our expectations. Tagging features, urgency tiers, and target dates are highly flexible and tailored for practical team needs.",
     },
     {
       id: "daniel",
-      name: "Daniel H.",
+      name: "Devansh Harish",
       role: "Product Manager",
       company: "NovaTech",
       quote:
-        "The clarity Kanbex provides is unmatched. I can glance at our dashboard and instantly understand what's in progress, what's stuck, and who needs help. We've saved hours every week just by switching.",
+        "The visibility offered by Kanbex is unparalleled. A quick look at the dashboard lets me immediately spot active tasks, bottlenecks, and team members requiring support. Switching over has reclaimed countless hours for us each week.",
     },
     {
       id: "zainab",
-      name: "Zainab Shaikh",
+      name: "Zoya Saxena",
       role: "Head of Projects",
       company: "Lumenly",
       quote: "",
@@ -40,19 +40,19 @@ export const testimonialsSection: TestimonialsSection = {
     },
     {
       id: "layla",
-      name: "Layla Mendez",
-      role: "UX Lead",
+      name: "Lata Mishra",
+      role: "UX Design Lead",
       company: "Loop Studio",
       quote:
-        "We've used other task platforms before, but none felt this clean and fast. The UI is intuitive, onboarding is painless, and the ability to toggle views (Kanban to list) has made managing projects far easier.",
+        "Having experimented with alternative project tools, we found none as sleek and responsive as this one. The user interface is highly intuitive, setup is frictionless, and shifting between Kanban boards and lists simplifies task tracking immensely.",
     },
     {
       id: "areeba",
-      name: "Areeba Qureshi",
+      name: "Anjali Joshi",
       role: "Senior Designer",
       company: "BrightGrid",
       quote:
-        "Honestly, we didn't expect a task tool to impact our creative workflow this much. Kanbex keeps everyone in sync — even across departments. The collaboration tools are smooth and effective.",
+        "Frankly, we never anticipated that a management system could refine our design pipeline so significantly. Kanbex keeps our entire studio aligned, even across different divisions. The cooperative features are seamless and reliable.",
     },
   ],
 };

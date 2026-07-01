@@ -5,11 +5,16 @@ import { haffer } from '@/lib/fonts';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Kanbex - Project Management',
+    default: 'Kanbex - Visual Task Organizer',
     template: '%s | Kanbex',
   },
-  description: 'A modern Kanban-style project management application',
-  keywords: ['project management', 'kanban', 'tasks', 'productivity'],
+  description: 'A sleek Kanban-based task and project coordination workspace',
+  keywords: [
+    'workflow administration',
+    'visual task board',
+    'action items',
+    'efficiency',
+  ],
   authors: [{ name: 'Kanbex' }],
   icons: {
     icon: '/favicon.ico',

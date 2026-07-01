@@ -6,11 +6,11 @@ import Image from 'next/image';
 import { easing, scrollViewport } from '@/lib/animations';
 
 const tags = [
-  { label: 'UI/UX', bgColor: 'bg-green-50', textColor: 'text-emerald-500' },
-  { label: 'Design', bgColor: 'bg-amber-50', textColor: 'text-amber-500' },
-  { label: 'High', bgColor: 'bg-blue-50', textColor: 'text-blue-500' },
-  { label: 'Wireframe', bgColor: 'bg-violet-50', textColor: 'text-violet-500' },
-  { label: 'Prototype', bgColor: 'bg-pink-50', textColor: 'text-pink-500' },
+  { label: 'Product Design', bgColor: 'bg-green-50', textColor: 'text-emerald-500' },
+  { label: 'Creative', bgColor: 'bg-amber-50', textColor: 'text-amber-500' },
+  { label: 'Critical', bgColor: 'bg-blue-50', textColor: 'text-blue-500' },
+  { label: 'Draft', bgColor: 'bg-violet-50', textColor: 'text-violet-500' },
+  { label: 'Demo', bgColor: 'bg-pink-50', textColor: 'text-pink-500' },
 ];
 
 const avatars = [
@@ -38,10 +38,10 @@ export function FloatingTaskCard({ variant = 'floating' }: FloatingTaskCardProps
       {/* Title & Description */}
       <div className="mb-3">
         <h4 className="font-semibold text-sm text-gray-900 mb-1">
-          Redesign Dashboard
+          Reconstruct Dashboard
         </h4>
         <p className="text-xs text-gray-500 leading-relaxed">
-          Refine header with minimal layout, icon buttons, and improved spacing.
+          Enhance navigation using a clean layout, clickable controls, and expanded margins.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export function FloatingTaskCard({ variant = 'floating' }: FloatingTaskCardProps
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-gray-500">
           <Paperclip className="w-3.5 h-3.5" />
-          <span className="text-[10px]">5 Files</span>
+          <span className="text-[10px]">5 Documents</span>
         </div>
 
         {/* Avatar Stack */}

@@ -1,5 +1,5 @@
 # ===========================================
-# TASKTROX FRONTEND - PRODUCTION DOCKERFILE
+# KANBEX FRONTEND - PRODUCTION DOCKERFILE
 # ===========================================
 # 3-stage build: deps → builder → runner
 # Produces a minimal image using Next.js standalone output

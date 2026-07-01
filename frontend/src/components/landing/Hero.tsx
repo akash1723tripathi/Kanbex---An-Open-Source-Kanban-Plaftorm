@@ -32,7 +32,7 @@ export function Hero() {
       {/* Background Grid */}
       <div className="absolute inset-0 pointer-events-none">
         <Image
-          src="/images/hero/grid-background.svg"
+          src="/images/hero/grid-background-new.png"
           alt=""
           fill
           className="object-cover object-top"
@@ -186,7 +186,7 @@ export function Hero() {
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M10 4V16M4 10H16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
             </svg>
-            <span>New Task</span>
+            <span>Create Task</span>
             <div className="absolute inset-0 rounded-[7px] shadow-[inset_0px_3px_0px_0px_rgba(255,255,255,0.2)]" />
           </motion.div>
 
@@ -199,7 +199,7 @@ export function Hero() {
             className="absolute flex items-center justify-center gap-1.5 bg-[#8b5cf6] text-white px-[18px] py-2.5 rounded-[7px] text-sm capitalize border border-white shadow-[0px_35px_50.5px_10px_rgba(139,92,246,0.25)]"
             style={{ left: '35%', top: '68%' }}
           >
-            <span>Add Member</span>
+            <span>Invite Team</span>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M10 4V16M4 10H16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
             </svg>
@@ -223,7 +223,7 @@ export function Hero() {
               className="absolute -left-4 -top-4"
             />
             <div className="bg-[#3b82f6] text-white text-xs px-2.5 py-1 rounded-full whitespace-nowrap">
-              Larry Charles
+              Lakshya Choudhary
             </div>
           </motion.div>
 
@@ -244,7 +244,7 @@ export function Hero() {
               className="absolute -left-4 -top-4"
             />
             <div className="bg-[#ec4899] text-white text-xs px-2.5 py-1 rounded-full whitespace-nowrap">
-              Christophe Bird
+              Chaitanya Bose
             </div>
           </motion.div>
 
@@ -259,7 +259,9 @@ export function Hero() {
             <div className="p-6 shadow-[0px_6px_12px_0px_rgba(0,0,0,0.15)] rounded-[10px]">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-black">Add New Member</h3>
+                <h3 className="text-xl font-semibold text-black">
+                  {heroContent.floatingElements.memberDialog.header}
+                </h3>
                 <button type="button" className="text-gray-400 hover:text-gray-600">
                   <Image
                     src="/images/hero/icon-close.svg"
@@ -279,63 +281,48 @@ export function Hero() {
                   height={20}
                   className="opacity-50"
                 />
-                <span className="text-sm text-[#737a82]">Search</span>
+                <span className="text-sm text-[#737a82]">
+                  {heroContent.floatingElements.memberDialog.searchPlaceholder}
+                </span>
               </div>
 
               {/* Team Members */}
               <div className="space-y-4">
-                <p className="text-xs text-gray-500">Team Member</p>
+                <p className="text-xs text-gray-500">
+                  {heroContent.floatingElements.memberDialog.label}
+                </p>
                 <div className="space-y-2.5">
-                  {/* Robert Stark */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <Image
-                        src="/images/hero/avatar-robert.png"
-                        alt="Robert Stark"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
-                      <div>
-                        <p className="text-sm text-gray-800">Robert Stark</p>
-                        <p className="text-xs text-gray-500 font-light">Designer</p>
+                  {heroContent.floatingElements.memberDialog.members.map((member, index) => (
+                    <div key={member.name}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <Image
+                            src={member.avatar || "/images/hero/avatar-robert.png"}
+                            alt={member.name}
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          />
+                          <div>
+                            <p className="text-sm text-gray-800">{member.name}</p>
+                            <p className="text-xs text-gray-500 font-light">{member.role}</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="relative bg-gradient-to-b from-[#262730] from-[80%] to-[rgba(56,57,66,0.7)] text-white px-4 py-1.5 rounded-[7px] text-sm capitalize border border-white/20 overflow-hidden"
+                        >
+                          <span className="relative z-10">
+                            {heroContent.floatingElements.memberDialog.buttonText}
+                          </span>
+                          <div className="absolute inset-0 shadow-[inset_0px_3px_0px_0px_rgba(255,255,255,0.2)]" />
+                        </button>
                       </div>
+                      {index < heroContent.floatingElements.memberDialog.members.length - 1 && (
+                        <div className="h-px bg-gray-200 mt-2.5" />
+                      )}
                     </div>
-                    <button
-                      type="button"
-                      className="relative bg-gradient-to-b from-[#262730] from-[80%] to-[rgba(56,57,66,0.7)] text-white px-4 py-1.5 rounded-[7px] text-sm capitalize border border-white/20 overflow-hidden"
-                    >
-                      <span className="relative z-10">Invite</span>
-                      <div className="absolute inset-0 shadow-[inset_0px_3px_0px_0px_rgba(255,255,255,0.2)]" />
-                    </button>
-                  </div>
-
-                  {/* Divider */}
-                  <div className="h-px bg-gray-200" />
-
-                  {/* Henry Williams */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <Image
-                        src="/images/hero/avatar-henry.png"
-                        alt="Henry Williams"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
-                      <div>
-                        <p className="text-sm text-gray-800">Henry Williams</p>
-                        <p className="text-xs text-gray-500 font-light">Senior Designer</p>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="relative bg-gradient-to-b from-[#262730] from-[80%] to-[rgba(56,57,66,0.7)] text-white px-4 py-1.5 rounded-[7px] text-sm capitalize border border-white/20 overflow-hidden"
-                    >
-                      <span className="relative z-10">Invite</span>
-                      <div className="absolute inset-0 shadow-[inset_0px_3px_0px_0px_rgba(255,255,255,0.2)]" />
-                    </button>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -358,36 +345,38 @@ export function Hero() {
                   width={22}
                   height={22}
                 />
-                <span className="text-[15px] text-gray-500">July 6, 2025</span>
+                <span className="text-[15px] text-gray-500">
+                  {heroContent.floatingElements.taskCard.date}
+                </span>
               </div>
 
               {/* Title and Description */}
               <div className="space-y-2">
                 <h4 className="text-xl font-semibold text-black">
-                  Redesign Dashboard
+                  {heroContent.floatingElements.taskCard.title}
                 </h4>
                 <p className="text-[15px] text-gray-500 leading-[1.5]">
-                  Refine header with minimal layout, icon buttons, and improved spacing.
+                  {heroContent.floatingElements.taskCard.description}
                 </p>
               </div>
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2">
-                <span className="bg-[#ecfdf5] text-[#10b981] text-xs px-2.5 py-1 rounded-full">
-                  UI/UX
-                </span>
-                <span className="bg-[#fffbeb] text-[#f59e0b] text-xs px-2.5 py-1 rounded-full">
-                  Design
-                </span>
-                <span className="bg-[#eff6ff] text-[#3b82f6] text-xs px-2.5 py-1 rounded-full">
-                  High
-                </span>
-                <span className="bg-[#f5f3ff] text-[#8b5cf6] text-xs px-2.5 py-1 rounded-full">
-                  Wireframe
-                </span>
-                <span className="bg-[#fdf2f8] text-[#ec4899] text-xs px-2.5 py-1 rounded-full">
-                  Prototype
-                </span>
+                {heroContent.floatingElements.taskCard.tags.map((tag) => {
+                  const tagStyles: Record<string, string> = {
+                    "Product Design": "bg-[#ecfdf5] text-[#10b981]",
+                    "Creative": "bg-[#fffbeb] text-[#f59e0b]",
+                    "Critical": "bg-[#eff6ff] text-[#3b82f6]",
+                    "Draft": "bg-[#f5f3ff] text-[#8b5cf6]",
+                    "Demo": "bg-[#fdf2f8] text-[#ec4899]",
+                  };
+                  const styles = tagStyles[tag] || "bg-gray-100 text-gray-800";
+                  return (
+                    <span key={tag} className={`${styles} text-xs px-2.5 py-1 rounded-full`}>
+                      {tag}
+                    </span>
+                  );
+                })}
               </div>
 
               {/* Divider */}
@@ -402,7 +391,9 @@ export function Hero() {
                     width={20}
                     height={20}
                   />
-                  <span className="text-xs text-gray-500">5 Files</span>
+                  <span className="text-xs text-gray-500">
+                    {heroContent.floatingElements.taskCard.fileCount}
+                  </span>
                 </div>
 
                 {/* Avatar Stack */}
@@ -462,33 +453,38 @@ export function Hero() {
                   width={20}
                   height={20}
                 />
-                <span className="text-sm text-gray-500">July 6, 2025</span>
+                <span className="text-sm text-gray-500">
+                  {heroContent.floatingElements.taskCard.date}
+                </span>
               </div>
 
               {/* Title and Description */}
               <div className="space-y-1.5">
                 <h4 className="text-lg font-semibold text-black">
-                  Redesign Dashboard
+                  {heroContent.floatingElements.taskCard.title}
                 </h4>
                 <p className="text-sm text-gray-500 leading-[1.5]">
-                  Refine header with minimal layout, icon buttons, and improved spacing.
+                  {heroContent.floatingElements.taskCard.description}
                 </p>
               </div>
 
               {/* Tags */}
               <div className="flex flex-wrap gap-1.5">
-                <span className="bg-[#ecfdf5] text-[#10b981] text-[11px] px-2 py-0.5 rounded-full">
-                  UI/UX
-                </span>
-                <span className="bg-[#fffbeb] text-[#f59e0b] text-[11px] px-2 py-0.5 rounded-full">
-                  Design
-                </span>
-                <span className="bg-[#eff6ff] text-[#3b82f6] text-[11px] px-2 py-0.5 rounded-full">
-                  High
-                </span>
-                <span className="bg-[#f5f3ff] text-[#8b5cf6] text-[11px] px-2 py-0.5 rounded-full">
-                  Wireframe
-                </span>
+                {heroContent.floatingElements.taskCard.tags.slice(0, 4).map((tag) => {
+                  const tagStyles: Record<string, string> = {
+                    "Product Design": "bg-[#ecfdf5] text-[#10b981]",
+                    "Creative": "bg-[#fffbeb] text-[#f59e0b]",
+                    "Critical": "bg-[#eff6ff] text-[#3b82f6]",
+                    "Draft": "bg-[#f5f3ff] text-[#8b5cf6]",
+                    "Demo": "bg-[#fdf2f8] text-[#ec4899]",
+                  };
+                  const styles = tagStyles[tag] || "bg-gray-100 text-gray-800";
+                  return (
+                    <span key={tag} className={`${styles} text-[11px] px-2 py-0.5 rounded-full`}>
+                      {tag}
+                    </span>
+                  );
+                })}
               </div>
 
               {/* Divider */}
@@ -503,7 +499,9 @@ export function Hero() {
                     width={18}
                     height={18}
                   />
-                  <span className="text-xs text-gray-500">5 Files</span>
+                  <span className="text-xs text-gray-500">
+                    {heroContent.floatingElements.taskCard.fileCount}
+                  </span>
                 </div>
 
                 {/* Avatar Stack */}
@@ -553,7 +551,7 @@ export function Hero() {
               <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                 <path d="M10 4V16M4 10H16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
               </svg>
-              <span>New Task</span>
+              <span>Create Task</span>
             </motion.div>
 
             <motion.div
@@ -563,7 +561,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.65 }}
               className="flex items-center justify-center gap-1.5 bg-[#8b5cf6] text-white px-4 py-2 rounded-[7px] text-sm capitalize border border-white shadow-[0px_20px_40px_5px_rgba(139,92,246,0.2)]"
             >
-              <span>Add Member</span>
+              <span>Invite Team</span>
               <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                 <path d="M10 4V16M4 10H16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
               </svg>
@@ -580,7 +578,7 @@ export function Hero() {
               className="flex items-center gap-1"
             >
               <div className="w-2 h-2 rounded-full bg-[#3b82f6]" />
-              <span className="text-xs text-gray-500">Larry Charles</span>
+              <span className="text-xs text-gray-500">Lakshya Choudhary</span>
             </motion.div>
             <motion.div
               variants={scaleIn}
@@ -590,7 +588,7 @@ export function Hero() {
               className="flex items-center gap-1"
             >
               <div className="w-2 h-2 rounded-full bg-[#ec4899]" />
-              <span className="text-xs text-gray-500">Christophe Bird</span>
+              <span className="text-xs text-gray-500">Chaitanya Bose</span>
             </motion.div>
           </div>
         </div>

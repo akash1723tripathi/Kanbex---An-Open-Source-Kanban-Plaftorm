@@ -1,9 +1,9 @@
 import type { CTAContent } from "../types";
 
 export const ctaContent: CTAContent = {
-  heading: "Start Getting Things Done Visually And Effortlessly",
+  heading: "Begin Managing Work Visually and Seamlessly",
   description:
-    "Unlock your team's potential by organizing tasks with Kanbex — the modern, intuitive to-do app designed to boost productivity and reduce chaos.",
+    "Empower your organization's potential by structuring workflows with Kanbex — the elegant, user-friendly task planner crafted to scale output and eliminate project clutter.",
   buttonText: "Get Started",
   buttonHref: "/login",
 };

@@ -2,37 +2,37 @@ import type { HeroContent } from "../types";
 
 export const heroContent: HeroContent = {
   badge: {
-    label: "Newly",
-    text: "Built for Smart Teams",
+    label: "Freshly",
+    text: "Crafted for Smart Teams",
   },
   headline: {
-    line1: "Your Daily Tasks",
-    line2: "Organized Effortlessly",
+    line1: "Your Everyday Workload",
+    line2: "Structured Seamlessly",
   },
   subheadline:
-    "Kanbex helps you manage daily tasks, assign teammates, and track progress — all in a simple, fast, and visual workspace.",
+    "Kanbex empowers you to coordinate everyday workflows, delegate roles to colleagues, and monitor milestones — all inside an intuitive, swift, and highly visual environment.",
   cta: {
     primary: { text: "Get Started", href: "/login" },
     secondary: { text: "View Demo", href: "#product-showcase" },
   },
   floatingElements: {
     taskCard: {
-      title: "Redesign Dashboard",
+      title: "Overhaul Interface",
       date: "July 6, 2025",
       description:
-        "Refine header with minimal layout, icon buttons, and improved spacing.",
-      tags: ["UI/UX", "Design", "High", "Wireframe", "Prototype"],
-      fileCount: "5 Files",
+        "Enhance navigation using a clean layout, clickable controls, and expanded margins.",
+      tags: ["Product Design", "Creative", "Critical", "Draft", "Demo"],
+      fileCount: "5 Documents",
     },
     memberDialog: {
-      header: "Add New Member",
-      label: "Team Member",
+      header: "Invite Collaborator",
+      label: "Project Member",
       members: [
-        { name: "Robert Stark", role: "Designer" },
-        { name: "Henry Williams", role: "Senior Designer" },
+        { name: "Rahul Sharma", role: "UI Designer", avatar: "/images/hero/avatar-robert.png" },
+        { name: "Harish Hegde", role: "Lead Creative", avatar: "/images/hero/avatar-henry.png" },
       ],
       buttonText: "Invite",
-      searchPlaceholder: "Search",
+      searchPlaceholder: "Find",
     },
   },
 };

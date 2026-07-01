@@ -7,13 +7,13 @@ import { easing, scrollViewport } from '@/lib/animations';
 
 const members = [
   {
-    name: 'Dimitri Ivanov',
-    role: 'Designer',
+    name: 'Devashish Sen',
+    role: 'UI Designer',
     avatar: '/images/showcase/member-awais.png',
   },
   {
-    name: 'Hamail Harrison',
-    role: 'Senior Designer',
+    name: 'Himanshu Verma',
+    role: 'Lead Creative',
     avatar: '/images/showcase/member-hamail.png',
   },
 ];
@@ -31,7 +31,7 @@ export function FloatingMemberDialog({ variant = 'floating' }: FloatingMemberDia
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-semibold text-sm text-gray-900">
-            Add New Member
+            Invite Collaborator
           </h4>
           <button className="text-gray-400 hover:text-gray-600 transition-colors">
             <X className="w-4 h-4" />
@@ -39,7 +39,7 @@ export function FloatingMemberDialog({ variant = 'floating' }: FloatingMemberDia
         </div>
 
         {/* Team Member Label */}
-        <p className="text-[10px] text-gray-500 mb-3">Team Member</p>
+        <p className="text-[10px] text-gray-500 mb-3">Project Member</p>
 
         {/* Members List */}
         <div className="space-y-3">

@@ -1,42 +1,42 @@
 import type { FeaturesSection } from "../types";
 
 export const featuresSection: FeaturesSection = {
-  header: "Why Teams Love Using Kanbex",
+  header: "What Makes Kanbex a Favorite for Teams",
   description:
-    "Discover how Kanbex simplifies team collaboration, boosts productivity, and helps you stay on top of every task — every day.",
+    "Explore how Kanbex streamlines group synergy, elevates efficiency, and ensures you remain in control of each assignment — day in, day out.",
   features: [
     {
       id: "precision",
       icon: "Target",
-      title: "Plan With Precision",
+      title: "Strategize with Accuracy",
       description:
-        "Turn ideas into actionable tasks with clear deadlines, priorities, and team ownership.",
+        "Transform concepts into execution-ready items complete with strict schedules, urgency levels, and dedicated owners.",
     },
     {
       id: "collaborate",
       icon: "Users",
-      title: "Collaborate Without Chaos",
+      title: "Team Up Without Confusion",
       description:
-        "Easily invite teammates, assign tasks, and stay aligned — whether remote or in-office.",
+        "Seamlessly bring coworkers on board, delegate responsibilities, and remain synchronized — regardless of location.",
     },
     {
       id: "track",
       icon: "BarChart3",
-      title: "Track What Matters",
+      title: "Oversee Key Metrics",
       description:
-        "Stay in control with a real-time view of progress across all task stages.",
+        "Maintain full oversight using live updates of task statuses and project development phases.",
     },
   ],
   preview: {
-    tags: ["UI/UX", "Design", "High", "Wireframe", "Prototype"],
+    tags: ["Product Design", "Creative", "Critical", "Draft", "Demo"],
     members: [
-      { name: "Dimitri Ivanov", role: "Designer" },
-      { name: "Hamail Harrison", role: "Senior Designer" },
+      { name: "Devashish Sen", role: "UI Designer", avatar: "/images/hero/avatar-robert.png" },
+      { name: "Himanshu Verma", role: "Lead Creative", avatar: "/images/hero/avatar-henry.png" },
     ],
     progress: {
-      title: "Project Progress",
+      title: "Project Velocity",
       percentage: 86,
-      comparison: "+12% vs Last Week",
+      comparison: "+12% compared to last week",
     },
   },
 };

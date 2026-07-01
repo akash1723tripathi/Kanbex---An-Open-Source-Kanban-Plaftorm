@@ -2,7 +2,7 @@ import type { FooterContent } from "../types";
 
 export const footerContent: FooterContent = {
   tagline:
-    "Get Organized, Simplify Your Workflow, And Move Faster As a Team.",
+    "Structure Your Projects, Streamline Tasks, and Accelerate Team Operations.",
   columns: [
     {
       title: "Product",
@@ -46,18 +46,13 @@ export const footerContent: FooterContent = {
   ],
   social: [
     {
-      platform: "Twitter",
-      href: "https://twitter.com/kanbex",
-      icon: "Twitter",
-    },
-    {
       platform: "LinkedIn",
-      href: "https://linkedin.com/company/kanbex",
+      href: "https://www.linkedin.com/in/akash-tripathi-b18901263/",
       icon: "Linkedin",
     },
     {
       platform: "GitHub",
-      href: "https://github.com/kanbex",
+      href: "https://github.com/akash1723tripathi/Kanbex---An-Open-Source-Kanban-Plaftorm",
       icon: "Github",
     },
   ],
