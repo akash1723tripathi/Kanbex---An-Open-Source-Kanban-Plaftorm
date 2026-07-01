@@ -50,3 +50,6 @@ export type {
   UsePresenceOptions,
   UsePresenceReturn,
 } from './usePresence';
+
+// Theme hook for dashboard dark mode
+export { useTheme, ThemeProvider } from './useTheme';

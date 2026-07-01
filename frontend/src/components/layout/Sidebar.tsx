@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Logo, LogoIcon } from '@/components/icons/Logo';
 import { useAuth, useProjects } from '@/hooks';
+import { useTheme } from '@/hooks/useTheme';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Navigation items for Dashboard section
@@ -53,6 +54,7 @@ export function Sidebar({
   const pathname = usePathname();
   const { logout } = useAuth();
   const { projects, isLoading: isLoadingProjects } = useProjects();
+  const { isDark } = useTheme();
   const [projectsExpanded, setProjectsExpanded] = useState(true);
 
   const handleLogout = async () => {
@@ -69,8 +71,11 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        'flex flex-col justify-between bg-white border-r border-sidebar-border h-full px-3 py-8 transition-all duration-300',
+        'flex flex-col justify-between border-r h-full px-3 py-8 transition-all duration-300',
         collapsed ? 'w-sidebar-collapsed' : 'w-sidebar',
+        isDark
+          ? 'bg-[#171d28] border-[#2e3548]'
+          : 'bg-white border-sidebar-border',
         className
       )}
     >
@@ -82,9 +87,9 @@ export function Sidebar({
           collapsed ? 'justify-center' : 'justify-between'
         )}>
           {collapsed ? (
-            <LogoIcon className="text-gray-800" />
+            <LogoIcon className={isDark ? 'text-gray-200' : 'text-gray-800'} />
           ) : (
-            <Logo className="text-gray-800" />
+            <Logo className={isDark ? 'text-gray-200' : 'text-gray-800'} />
           )}
 
           {/* Mobile Close Button - positioned absolutely to stay within sidebar */}
@@ -104,7 +109,7 @@ export function Sidebar({
           {/* Dashboard Section */}
           <div className="flex flex-col gap-1.5">
             {!collapsed && (
-              <p className="px-4 text-xs text-gray-500 leading-4">Dashboard</p>
+              <p className={cn('px-4 text-xs leading-4', isDark ? 'text-gray-500' : 'text-gray-500')}>Dashboard</p>
             )}
             <div className="flex flex-col">
               {dashboardNavItems.map((item) => {
@@ -133,7 +138,7 @@ export function Sidebar({
           {/* Projects Section - Hidden when collapsed */}
           {!collapsed && (
             <div className="flex flex-col gap-1.5 mt-2">
-              <p className="px-4 text-xs text-gray-500 leading-4">Projects</p>
+              <p className={cn('px-4 text-xs leading-4', isDark ? 'text-gray-500' : 'text-gray-500')}>Projects</p>
               <div className="flex flex-col">
                 {/* All Projects Toggle */}
                 <button
@@ -161,7 +166,7 @@ export function Sidebar({
                       </div>
                     ) : projects.length === 0 ? (
                       // Empty state
-                      <p className="px-4 py-2 text-sm text-gray-400">
+                      <p className={cn('px-4 py-2 text-sm', isDark ? 'text-gray-500' : 'text-gray-400')}>
                         No projects yet
                       </p>
                     ) : (
@@ -191,7 +196,12 @@ export function Sidebar({
                 <div className="px-4 mt-2">
                   <button
                     onClick={onNewProject}
-                    className="btn-primary flex items-center justify-center gap-1.5 w-full"
+                    className={cn(
+                      'flex items-center justify-center gap-1.5 w-full rounded-button px-4 py-2 text-sm font-medium transition-colors',
+                      isDark
+                        ? 'bg-gray-200 text-gray-900 hover:bg-gray-300'
+                        : 'bg-gray-800 text-white hover:bg-gray-700'
+                    )}
                   >
                     <Plus className="size-5" />
                     <span>New Project</span>
@@ -206,7 +216,12 @@ export function Sidebar({
             <div className="flex justify-center mt-4">
               <button
                 onClick={onNewProject}
-                className="p-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                className={cn(
+                  'p-2 rounded-lg transition-colors',
+                  isDark
+                    ? 'bg-gray-200 text-gray-900 hover:bg-gray-300'
+                    : 'bg-gray-800 text-white hover:bg-gray-700'
+                )}
                 title="New Project"
               >
                 <Plus className="size-5" />

@@ -58,26 +58,26 @@
   }
 
   .dark {
-    /* Dark mode colors (future implementation) */
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    /* ===== Dark Mode Palette ===== */
+    --background: 222 47% 11%;     /* #1a1f2e */
+    --foreground: 214 32% 91%;     /* #dce3ed */
+    --card: 223 37% 14%;           /* #1e2533 */
+    --card-foreground: 214 32% 91%;
+    --popover: 223 37% 14%;
+    --popover-foreground: 214 32% 91%;
+    --primary: 214 32% 91%;
     --primary-foreground: 222 47% 11%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
+    --secondary: 220 26% 18%;      /* #252d3d */
+    --secondary-foreground: 214 32% 91%;
+    --muted: 220 26% 18%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 220 26% 20%;
+    --accent-foreground: 214 32% 91%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 212 27% 84%;
+    --border: 220 20% 22%;         /* #2e3548 */
+    --input: 220 20% 22%;
+    --ring: 212 27% 50%;
     --chart-1: 142 71% 45%;
     --chart-2: 45 93% 47%;
     --chart-3: 217 91% 60%;
@@ -102,6 +102,14 @@
       'calt' 1;
   }
 
+  /* ===== Dashboard Dark Mode Seamless Transition ===== */
+  .dashboard-theme-wrapper,
+  .dashboard-theme-wrapper *:not(svg):not(path) {
+    transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+    transition-duration: 300ms;
+    transition-timing-function: ease;
+  }
+
   /* ===== Heading Styles ===== */
   h1,
   h2,
@@ -110,6 +118,15 @@
   h5,
   h6 {
     @apply text-gray-800 font-semibold tracking-tight;
+  }
+
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4,
+  .dark h5,
+  .dark h6 {
+    color: #e8ecf2;
   }
 
   h1 {
@@ -146,10 +163,23 @@
   @apply bg-gray-400;
 }
 
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #3b4558;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #4b5a73;
+}
+
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
   scrollbar-color: #d1d5db transparent;
+}
+
+.dark * {
+  scrollbar-color: #3b4558 transparent;
 }
 
 /* ========================================
@@ -166,6 +196,10 @@
 
 ::selection {
   @apply bg-gray-800/10;
+}
+
+.dark ::selection {
+  background-color: rgba(148, 163, 184, 0.2);
 }
 
 /* ========================================
@@ -274,6 +308,19 @@
 
   .sidebar-item.active {
     @apply bg-sidebar-active font-medium;
+  }
+
+  .dark .sidebar-item {
+    color: #c1cad7;
+  }
+
+  .dark .sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .dark .sidebar-item.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #e8ecf2;
   }
 
   /* ===== Column Header ===== */

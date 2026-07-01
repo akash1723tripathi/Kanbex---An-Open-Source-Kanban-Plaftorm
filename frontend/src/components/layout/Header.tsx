@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import { useTheme } from '@/hooks/useTheme';
+import { ThemeToggle } from './ThemeToggle';
 
 interface BreadcrumbItem {
   label: string;
@@ -32,6 +34,7 @@ export function Header({
 }: HeaderProps) {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { isDark } = useTheme();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -69,7 +72,10 @@ export function Header({
   return (
     <header
       className={cn(
-        'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2',
+        'flex items-center justify-between border rounded-lg px-4 py-2 transition-colors duration-300',
+        isDark
+          ? 'bg-[#1e2533] border-[#2e3548]'
+          : 'bg-white border-gray-100',
         className
       )}
     >
@@ -79,10 +85,15 @@ export function Header({
         {showBackButton && (
           <button
             onClick={handleBack}
-            className="flex items-center justify-center p-2 bg-white border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
+            className={cn(
+              'flex items-center justify-center p-2 border rounded-lg transition-colors',
+              isDark
+                ? 'bg-[#252d3d] border-[#2e3548] hover:bg-[#2e3548]'
+                : 'bg-white border-gray-100 hover:bg-gray-50'
+            )}
             aria-label="Go back"
           >
-            <ArrowLeft className="size-3.5 text-gray-500" />
+            <ArrowLeft className={cn('size-3.5', isDark ? 'text-gray-400' : 'text-gray-500')} />
           </button>
         )}
 
@@ -92,9 +103,9 @@ export function Header({
             {breadcrumbs.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
                 {index > 0 && (
-                  <span className="text-gray-500 text-base">/</span>
+                  <span className={cn('text-base', isDark ? 'text-gray-500' : 'text-gray-500')}>/</span>
                 )}
-                <span className="text-gray-500 text-base leading-5">
+                <span className={cn('text-base leading-5', isDark ? 'text-gray-400' : 'text-gray-500')}>
                   {item.label}
                 </span>
               </div>
@@ -105,27 +116,41 @@ export function Header({
 
       {/* Right Side - User Info */}
       <div className="flex items-center gap-2">
+        {/* Theme Toggle - Neumorphic Switch */}
+        <ThemeToggle />
+
         {/* Updates/What's New Icon */}
         <button
-          className="flex items-center justify-center p-2.5 rounded hover:bg-gray-50 transition-colors"
+          className={cn(
+            'flex items-center justify-center p-2.5 rounded transition-colors',
+            isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'
+          )}
           aria-label="What's new"
         >
-          <Lightbulb className="size-6 text-gray-500" />
+          <Lightbulb className={cn('size-6', isDark ? 'text-gray-400' : 'text-gray-500')} />
         </button>
 
         {/* Notifications Icon */}
         <button
-          className="flex items-center justify-center p-2.5 rounded hover:bg-gray-50 transition-colors"
+          className={cn(
+            'flex items-center justify-center p-2.5 rounded transition-colors',
+            isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'
+          )}
           aria-label="Notifications"
         >
-          <Bell className="size-6 text-gray-500" />
+          <Bell className={cn('size-6', isDark ? 'text-gray-400' : 'text-gray-500')} />
         </button>
 
         {/* User Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-3 bg-white rounded-lg p-1.5 hover:bg-gray-50 transition-colors"
+            className={cn(
+              'flex items-center gap-3 rounded-lg p-1.5 transition-colors',
+              isDark
+                ? 'bg-transparent hover:bg-white/5'
+                : 'bg-white hover:bg-gray-50'
+            )}
             aria-expanded={dropdownOpen}
             aria-haspopup="true"
           >
@@ -137,20 +162,24 @@ export function Header({
                 className="size-8 rounded-full object-cover"
               />
             ) : (
-              <div className="size-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium text-gray-600">
+              <div className={cn(
+                'size-8 rounded-full flex items-center justify-center text-xs font-medium',
+                isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-600'
+              )}>
                 {user?.name ? getInitials(user.name) : 'U'}
               </div>
             )}
 
             {/* User Name */}
-            <span className="text-gray-700 text-base leading-5">
+            <span className={cn('text-base leading-5', isDark ? 'text-gray-300' : 'text-gray-700')}>
               {user?.name || 'User'}
             </span>
 
             {/* Chevron */}
             <ChevronDown
               className={cn(
-                'size-6 text-gray-400 transition-transform duration-200',
+                'size-6 transition-transform duration-200',
+                isDark ? 'text-gray-500' : 'text-gray-400',
                 dropdownOpen && 'rotate-180'
               )}
             />
@@ -158,15 +187,23 @@ export function Header({
 
           {/* Dropdown Menu */}
           {dropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-dropdown py-1 z-50 animate-fade-in">
+            <div className={cn(
+              'absolute right-0 top-full mt-2 w-48 border rounded-lg shadow-dropdown py-1 z-50 animate-fade-in',
+              isDark
+                ? 'bg-[#1e2533] border-[#2e3548]'
+                : 'bg-white border-gray-100'
+            )}>
               <button
                 onClick={() => {
                   setDropdownOpen(false);
                   router.push('/profile');
                 }}
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-body hover:bg-gray-50 transition-colors"
+                className={cn(
+                  'flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors',
+                  isDark ? 'text-gray-300 hover:bg-white/5' : 'text-body hover:bg-gray-50'
+                )}
               >
-                <User className="size-4 text-gray-500" />
+                <User className={cn('size-4', isDark ? 'text-gray-500' : 'text-gray-500')} />
                 <span>My Profile</span>
               </button>
               <button
@@ -174,17 +211,23 @@ export function Header({
                   setDropdownOpen(false);
                   router.push('/settings');
                 }}
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-body hover:bg-gray-50 transition-colors"
+                className={cn(
+                  'flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors',
+                  isDark ? 'text-gray-300 hover:bg-white/5' : 'text-body hover:bg-gray-50'
+                )}
               >
-                <Settings className="size-4 text-gray-500" />
+                <Settings className={cn('size-4', isDark ? 'text-gray-500' : 'text-gray-500')} />
                 <span>Settings</span>
               </button>
-              <div className="border-t border-gray-100 my-1" />
+              <div className={cn('border-t my-1', isDark ? 'border-[#2e3548]' : 'border-gray-100')} />
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-body hover:bg-gray-50 transition-colors"
+                className={cn(
+                  'flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors',
+                  isDark ? 'text-gray-300 hover:bg-white/5' : 'text-body hover:bg-gray-50'
+                )}
               >
-                <LogOut className="size-4 text-gray-500" />
+                <LogOut className={cn('size-4', isDark ? 'text-gray-500' : 'text-gray-500')} />
                 <span>Logout</span>
               </button>
             </div>

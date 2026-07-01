@@ -35,10 +35,10 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div>
-        <h1 className="text-xl font-semibold text-gray-800">
+        <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
           Welcome back, {user?.name?.split(' ')[0] || 'User'}!
         </h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
           Here's what's happening with your projects today.
         </p>
       </div>
@@ -48,18 +48,18 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-info-light rounded-lg">
+              <div className="p-2 bg-info-light dark:bg-info/10 rounded-lg">
                 <CheckSquare className="size-5 text-info" />
               </div>
               <div>
                 {isLoadingStats ? (
                   <Skeleton className="h-8 w-12 mb-1" />
                 ) : (
-                  <p className="text-2xl font-semibold text-gray-800">
+                  <p className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
                     {stats?.tasks.total ?? 0}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">Total Tasks</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Total Tasks</p>
               </div>
             </div>
           </CardContent>
@@ -68,18 +68,18 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-warning-light rounded-lg">
+              <div className="p-2 bg-warning-light dark:bg-warning/10 rounded-lg">
                 <Clock className="size-5 text-warning" />
               </div>
               <div>
                 {isLoadingStats ? (
                   <Skeleton className="h-8 w-12 mb-1" />
                 ) : (
-                  <p className="text-2xl font-semibold text-gray-800">
+                  <p className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
                     {stats?.tasks.inProgress ?? 0}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">In Progress</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">In Progress</p>
               </div>
             </div>
           </CardContent>
@@ -88,18 +88,18 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-success-light rounded-lg">
+              <div className="p-2 bg-success-light dark:bg-success/10 rounded-lg">
                 <TrendingUp className="size-5 text-success" />
               </div>
               <div>
                 {isLoadingStats ? (
                   <Skeleton className="h-8 w-12 mb-1" />
                 ) : (
-                  <p className="text-2xl font-semibold text-gray-800">
+                  <p className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
                     {stats?.tasks.completed ?? 0}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">Completed</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Completed</p>
               </div>
             </div>
           </CardContent>
@@ -108,18 +108,18 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-error-light rounded-lg">
+              <div className="p-2 bg-error-light dark:bg-error/10 rounded-lg">
                 <AlertTriangle className="size-5 text-error" />
               </div>
               <div>
                 {isLoadingStats ? (
                   <Skeleton className="h-8 w-12 mb-1" />
                 ) : (
-                  <p className="text-2xl font-semibold text-gray-800">
+                  <p className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
                     {stats?.tasks.overdue ?? 0}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">Overdue</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Overdue</p>
               </div>
             </div>
           </CardContent>
@@ -142,10 +142,10 @@ export default function DashboardPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold text-gray-800">Your Projects</h2>
-            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 rounded-full">
-              <FolderKanban className="size-3.5 text-gray-500" />
-              <span className="text-xs font-medium text-gray-600">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Your Projects</h2>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 dark:bg-white/10 rounded-full">
+              <FolderKanban className="size-3.5 text-gray-500 dark:text-gray-400" />
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
                 {isLoadingStats ? '...' : stats?.projects.activeProjects ?? projects.length}
               </span>
             </div>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
           {showViewAll && (
             <Link
               href="/projects"
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             >
               View All
               <ArrowRight className="size-4" />
@@ -172,13 +172,13 @@ export default function DashboardPage() {
           // Empty state
           <Card className="p-8">
             <div className="flex flex-col items-center justify-center text-center">
-              <div className="p-3 bg-gray-100 rounded-full mb-4">
+              <div className="p-3 bg-gray-100 dark:bg-white/10 rounded-full mb-4">
                 <FolderKanban className="size-8 text-gray-400" />
               </div>
-              <h3 className="text-base font-medium text-gray-800 mb-1">
+              <h3 className="text-base font-medium text-gray-800 dark:text-gray-100 mb-1">
                 No projects yet
               </h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 Create your first project to get started
               </p>
               <Link href="/projects" className="btn-primary flex items-center gap-1.5">

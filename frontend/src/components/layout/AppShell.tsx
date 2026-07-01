@@ -9,6 +9,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { NewProjectModal } from '@/components/project';
 import { createProject } from '@/lib/api/projects';
+import { ThemeProvider, useTheme } from '@/hooks';
 
 interface BreadcrumbItem {
   label: string;
@@ -21,13 +22,14 @@ interface AppShellProps {
   showBackButton?: boolean;
 }
 
-export function AppShell({
+function AppShellInner({
   children,
   breadcrumbs = [],
   showBackButton = true,
 }: AppShellProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { isDark } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [newProjectModalOpen, setNewProjectModalOpen] = useState(false);
@@ -74,7 +76,12 @@ export function AppShell({
   }, [mobileMenuOpen]);
 
   return (
-    <div className="flex h-screen bg-page overflow-hidden">
+    <div
+      className={cn(
+        'dashboard-theme-wrapper flex h-screen overflow-hidden',
+        isDark ? 'dark bg-[#141922]' : 'bg-page'
+      )}
+    >
       {/* Desktop Sidebar - Hidden on mobile */}
       <Sidebar
         className="hidden lg:flex flex-shrink-0"
@@ -117,7 +124,12 @@ export function AppShell({
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="flex items-center justify-center p-2 bg-white border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors lg:hidden"
+              className={cn(
+                'flex items-center justify-center p-2 border rounded-lg transition-colors lg:hidden',
+                isDark
+                  ? 'bg-[#1e2533] border-[#2e3548] hover:bg-[#252d3d] text-gray-400'
+                  : 'bg-white border-gray-100 hover:bg-gray-50'
+              )}
               aria-label="Open menu"
             >
               <Menu className="size-5 text-gray-500" />
@@ -145,6 +157,14 @@ export function AppShell({
         onSubmit={handleCreateProject}
       />
     </div>
+  );
+}
+
+export function AppShell(props: AppShellProps) {
+  return (
+    <ThemeProvider>
+      <AppShellInner {...props} />
+    </ThemeProvider>
   );
 }
 
